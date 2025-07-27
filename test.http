@@ -1,0 +1,41 @@
+POST http://localhost:8000/api/register
+Content-Type: application/json
+
+{
+  "firstName": "JK-i",
+  "middleName": "Kowo",
+  "lastName": "Meow",
+  "email": "Kowo@gmail.com",
+  "phoneNumber": "0724737989",
+  "password": "123456"
+
+}
+
+###
+GET http://localhost:8000/api/users
+
+### Get user by phone number
+GET http://localhost:8000/api/users/by-phone/0723737989
+Content-Type: application/json
+
+###
+POST http://localhost:8000/api/contributions
+Content-Type: application/json
+
+{
+  "phoneNumber": "0723737989",
+  "amount": "111",
+  "month": "May",
+  "year": "2025"
+
+}
+
+###
+GET http://localhost:8000/api/contributions
+
+###
+GET http://localhost:8000/api/contributions?year=2025
+
+
+###
+http://localhost:8000/api/contributions?year=2025&month=May
