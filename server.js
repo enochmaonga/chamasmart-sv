@@ -6,6 +6,9 @@ const userRoutes = require('./routes/userRoutes');
 const authRoutes = require('./routes/authRoutes');
 const contributionRoutes = require('./routes/contributionRoutes');
 
+const dashboardRoutes = require('./routes/dashboardRoutes');
+
+
 
 dotenv.config();
 
@@ -19,9 +22,10 @@ app.use(cors({
 }));
 
 // Routes
-app.use('/api/users', userRoutes);
+app.use('/api/', userRoutes);
 app.use('/api', authRoutes);
 app.use('/api/contributions', contributionRoutes);
+app.use('/api/dashboard', dashboardRoutes);
 
 
 // MongoDB Connection

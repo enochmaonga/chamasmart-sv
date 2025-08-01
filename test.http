@@ -2,12 +2,12 @@ POST http://localhost:8000/api/register
 Content-Type: application/json
 
 {
-  "firstName": "JK-i",
-  "middleName": "Kowo",
-  "lastName": "Meow",
-  "email": "Kowo@gmail.com",
-  "phoneNumber": "0724737989",
-  "password": "123456"
+  "firstName": "Enoch",
+  "middleName": "Maonga",
+  "lastName": "Mokua",
+  "email": "maongaenoch@gmail.com",
+  "phoneNumber": "0722737989"
+  
 
 }
 
@@ -15,7 +15,7 @@ Content-Type: application/json
 GET http://localhost:8000/api/users
 
 ### Get user by phone number
-GET http://localhost:8000/api/users/by-phone/0723737989
+GET http://localhost:8000/api/by-phone/0722737989
 Content-Type: application/json
 
 ###
@@ -39,3 +39,27 @@ GET http://localhost:8000/api/contributions?year=2025
 
 ###
 http://localhost:8000/api/contributions?year=2025&month=May
+
+
+### Get dashboard stats
+GET http://localhost:8000/api/dashboard/stats
+
+###
+POST http://localhost:8000/api/login
+Content-Type: application/json
+
+{
+  "email": "maongaenoch@gmail.com",
+  "password": "Me0708090909"
+
+}
+
+###
+POST http://localhost:8000/api/reset-password
+Content-Type: application/json
+
+{
+  "newPassword": "Me0708090909#*",
+  "confirmPassword": "Me0708090909#*"
+
+}
