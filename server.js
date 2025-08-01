@@ -17,7 +17,7 @@ app.use(express.json());
 
 // Middleware
 app.use(cors({
-  origin: ['https://chama-app-xi.vercel.app',
+  origin: ['https://chama-expressvercelapp.vercel.app/',
   'http://localhost:3000'],
   credentials: true, // if you're sending cookies or headers
 }));
