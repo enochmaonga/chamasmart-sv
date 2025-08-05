@@ -15,7 +15,7 @@ Content-Type: application/json
 GET http://localhost:8000/api/users
 
 ### Get user by phone number
-GET http://localhost:8000/api/by-phone/0722737989
+GET http://localhost:8000/api/by-name?firstName=Leah
 Content-Type: application/json
 
 ###

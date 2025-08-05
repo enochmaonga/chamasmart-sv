@@ -110,22 +110,37 @@ router.post('/reset-password/:token', async (req, res) => {
 });
 
 
-// Fetch user by phone number
-router.get('/by-phone/:phoneNumber', async (req, res) => {
-  const { phoneNumber } = req.params;
+// Fetch user(s) by first name, last name, or both
+router.get('/by-name', async (req, res) => {
+  const { firstName, lastName } = req.query;
+
+  if (!firstName && !lastName) {
+    return res.status(400).json({ error: 'Please provide firstName or lastName or both' });
+  }
+
+  // Build dynamic query
+  const query = {};
+  if (firstName) query.firstName = new RegExp(`^${firstName}$`, 'i'); // case-insensitive exact match
+  if (lastName) query.lastName = new RegExp(`^${lastName}$`, 'i');
 
   try {
-    const user = await User.findOne({ phoneNumber });
-    if (!user) return res.status(404).json({ error: 'User not found' });
+    const users = await User.find(query);
 
-    res.json({
+    if (users.length === 0) {
+      return res.status(404).json({ error: 'No users found' });
+    }
+
+    const result = users.map(user => ({
       firstName: user.firstName,
       lastName: user.lastName,
+       phoneNumber: user.phoneNumber,
       memberNumber: user.memberNumber,
       userType: user.userType
-    });
+    }));
+
+    res.json(result);
   } catch (err) {
-    console.error('Error fetching user by phone:', err);
+    console.error('Error fetching user(s) by name:', err);
     res.status(500).json({ error: 'Internal server error' });
   }
 });
