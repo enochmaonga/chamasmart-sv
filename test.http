@@ -15,7 +15,7 @@ Content-Type: application/json
 GET http://localhost:8000/api/users
 
 ### Get user by phone number
-GET http://localhost:8000/api/by-name?firstName=Leah
+GET http://localhost:8000/api/by-name?firstName=Mary
 Content-Type: application/json
 
 ###
@@ -23,10 +23,13 @@ POST http://localhost:8000/api/contributions
 Content-Type: application/json
 
 {
-  "phoneNumber": "0723737989",
-  "amount": "111",
-  "month": "May",
-  "year": "2025"
+  "firstName": "Nancy",
+  "lastName": "Nyakundi",
+  "memberNumber": "53",
+  "phoneNumber": "0726",
+  "amount": "3501",
+  "month": "March",
+  "year": "2023"
 
 }
 
@@ -49,8 +52,8 @@ POST http://localhost:8000/api/login
 Content-Type: application/json
 
 {
-  "email": "maongaenoch@gmail.com",
-  "password": "Me0708090909"
+  "email": "emmamaonga@gmail.com",
+  "password": "2008Emma"
 
 }
 

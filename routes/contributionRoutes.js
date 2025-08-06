@@ -21,26 +21,30 @@ async function connectToDB() {
 }
 
 // POST /api/contributions
+// POST /api/contributions
 router.post('/', async (req, res) => {
     try {
-        const { phoneNumber, amount, month, year } = req.body;
+        const { memberNumber, amount, month, year } = req.body;
         console.log("📥 Received contribution payload:", req.body);
 
-        if (!phoneNumber || !amount || !month || !year) {
-            return res.status(400).json({ error: "Phone number, amount, month, and year are required." });
+        if (!memberNumber || !amount || !month || !year) {
+            return res.status(400).json({ error: "Member number, amount, month, and year are required." });
         }
 
         const db = await connectToDB();
         const memberCollection = db.collection("users");
         const contributionsCollection = db.collection("contributions");
 
-        const user = await memberCollection.findOne({ phoneNumber });
+        const user = await memberCollection.findOne({ memberNumber });
         if (!user) {
-            return res.status(404).json({ error: "Member with this phone number not found." });
+            return res.status(404).json({ error: "Member with this member number not found." });
         }
 
-        const { firstName, lastName, memberNumber } = user;
+        const { firstName, lastName } = user;
         const existingContribution = await contributionsCollection.findOne({ memberNumber });
+
+        // ... (rest of your logic remains unchanged)
+
 
         if (!existingContribution) {
             const newContribution = {
