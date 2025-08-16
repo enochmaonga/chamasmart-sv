@@ -1,65 +1,62 @@
-const express = require('express');
-const { MongoClient } = require('mongodb');
+const express = require("express");
 const router = express.Router();
-require('dotenv').config();
 
-const uri = process.env.MONGO_URI;
-const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
+const Tenant = require("../models/tenantModel");
+const User = require("../models/user");
+const Contribution = require("../models/contributionModel");
+const Expense = require("../models/expense");
 
-let database;
-
-async function connectToDB() {
-    if (!database) {
-        if (!client.topology || !client.topology.isConnected()) {
-            await client.connect();
-            console.log("✅ MongoClient connected.");
-        }
-        database = client.db("chamaxpress");
-    }
-    return database;
-}
-
-// GET /api/dashboard/stats
-router.get('/stats', async (req, res) => {
+// GET /api/dashboard/stats?tenantId=<Nano ID>
+router.get("/stats", async (req, res) => {
     try {
-        const db = await connectToDB();
-        const userCollection = db.collection("users");
-        const contributionCollection = db.collection("contributions");
-        const expensesCollection = db.collection("expenses");
+        let { tenantId } = req.query;
+        if (!tenantId) return res.status(400).json({ error: "tenantId is required" });
 
-        // 1. Active Members count
-        const totalMembersCount = await userCollection.countDocuments({});
+        tenantId = tenantId.trim(); // normalize Nano ID
+        console.log("DEBUG: Request tenantId:", tenantId);
 
+        // Confirm tenant exists
+        const tenant = await Tenant.findOne({ $or: [{ name: tenantId }, { tenantId }] });
+        if (!tenant) return res.status(404).json({ error: "Tenant not found" });
 
-        // 2. Total Contributions
-        const allContributions = await contributionCollection.find({}).toArray();
+        const queryTenantId = tenant.tenantId; // Nano ID stored in DB
+        console.log("DEBUG: Querying collections with tenantId:", queryTenantId);
+
+        // 1️⃣ Members
+        const totalMembersCount = await User.countDocuments({ tenantId: queryTenantId });
+
+        // 2️⃣ Contributions
+        const allContributions = await Contribution.find({ tenantId: queryTenantId });
         let totalContributions = 0;
+        const validMonths = [
+            "January", "February", "March", "April", "May", "June",
+            "July", "August", "September", "October", "November", "December"
+        ];
 
         allContributions.forEach(member => {
-            member.contributions.forEach(year => {
-                for (const month in year.monthly) {
-                    totalContributions += year.monthly[month];
-                }
+            member.contributions?.forEach(year => {
+                validMonths.forEach(month => {
+                    totalContributions += Number(year.monthly?.[month]) || 0;
+                });
             });
         });
 
-        // 3. Total Expenses
-        const expenses = await expensesCollection.find({}).toArray();
-        const totalExpenses = expenses.reduce((sum, expense) => sum + (expense.amount || 0), 0);
 
-        // 4. Balance
-        const balance = totalContributions - totalExpenses;
+        // 3️⃣ Expenses
+        const expenses = await Expense.find({ tenantId: queryTenantId });
+        const totalExpenses = expenses.reduce((sum, e) => sum + (Number(e.amount) || 0), 0);
 
-        return res.status(200).json({
+        // 4️⃣ Send response
+        res.json({
             totalMembers: totalMembersCount,
             totalContributions,
             totalExpenses,
-            balance
+            balance: totalContributions - totalExpenses
         });
 
-    } catch (error) {
-        console.error("❌ Error fetching dashboard stats:", error);
-        return res.status(500).json({ error: "Failed to fetch dashboard stats." });
+    } catch (err) {
+        console.error("❌ Error:", err);
+        res.status(500).json({ error: "Failed to fetch dashboard stats" });
     }
 });
 

@@ -5,7 +5,7 @@ const cors = require('cors');
 const userRoutes = require('./routes/userRoutes');
 const authRoutes = require('./routes/authRoutes');
 const contributionRoutes = require('./routes/contributionRoutes');
-
+const tenantRegRoute = require('./routes/tenantRegRoute');
 const dashboardRoutes = require('./routes/dashboardRoutes');
 
 
@@ -17,8 +17,8 @@ app.use(express.json());
 
 // Middleware
 app.use(cors({
-  origin: ['https://chama-expres.vercel.app',
-  'http://localhost:3000'],
+  origin: ['http://localhost:3001',
+  'http://localhost:3001'],
   credentials: true, // if you're sending cookies or headers
 }));
 
@@ -27,6 +27,8 @@ app.use('/api/', userRoutes);
 app.use('/api', authRoutes);
 app.use('/api/contributions', contributionRoutes);
 app.use('/api/dashboard', dashboardRoutes);
+app.use('/api/tenants', tenantRegRoute);
+
 
 
 // MongoDB Connection

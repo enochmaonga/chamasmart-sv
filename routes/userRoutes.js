@@ -5,39 +5,53 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const sendEmail = require('../utils/sendEmail');
 const User = require('../models/user');
+const { verifyToken } = require('../middleware/authMiddleware');
 
 // Register user
 router.post('/register', async (req, res) => {
-  const { firstName, middleName, lastName, email, phoneNumber, userType = 'user' } = req.body;
+  const { tenantId, firstName, middleName, lastName, email, phoneNumber, userType = 'user' } = req.body;
+
+  if (!tenantId) return res.status(400).json({ message: 'tenantId is required' });
 
   try {
-    const existingUser = await User.findOne({ email });
+    // Check if user already exists under this tenant
+    const existingUser = await User.findOne({ email, tenantId });
     if (existingUser) return res.status(409).json({ message: 'User already exists' });
 
+    // Get or create tenant-specific counter for memberNumber
     const counter = await Counter.findOneAndUpdate(
-      { name: 'memberNumber' },
+      { tenantId, name: 'memberNumber' },
       { $inc: { value: 1 } },
-      { new: true, upsert: true }
+      { new: true, upsert: true, setDefaultsOnInsert: true }
     );
 
+    // Create memberNumber like MN001, MN002, MN003...
+    const memberNumber = `MN${String(counter.value).padStart(3, '0')}`;
+
     const newUser = new User({
+      tenantId,
       firstName,
       middleName,
       lastName,
       email,
       phoneNumber,
       userType,
-      memberNumber: counter.value,
+      memberNumber,
       createdAt: new Date(),
     });
 
     await newUser.save();
 
-    const token = jwt.sign({ email }, process.env.JWT_SECRET, { expiresIn: '24h' });
-    const link = `http://localhost:3000/create-password?token=${token}`;
+    // Send password setup email
+    const token = jwt.sign({ email, tenantId }, process.env.JWT_SECRET, { expiresIn: '24h' });
+    const link = `http://localhost:3001/create-password?token=${token}`;
     await sendEmail(email, 'Set Your Password', `Click here to set your password: ${link}`);
 
-    res.status(201).json({ message: 'User created and email sent.' });
+    res.status(201).json({
+      message: 'User created and email sent.',
+      memberNumber
+    });
+
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Error registering user', error: error.message });
@@ -50,9 +64,10 @@ router.post('/set-password', async (req, res) => {
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    const email = decoded.email;
+    const { email, tenantId } = decoded;
 
-    const user = await User.findOne({ email });
+
+    const user = await User.findOne({ email, tenantId });
     if (!user) return res.status(404).json({ message: 'User not found' });
 
     user.password = await bcrypt.hash(password, 10);
@@ -67,13 +82,14 @@ router.post('/set-password', async (req, res) => {
 // Reset password (send reset email)
 router.post('/reset-password', async (req, res) => {
   const { email } = req.body;
+  const tenantId = req.tenantId;
 
   try {
-    const user = await User.findOne({ email });
+    const user = await User.findOne({ email, tenantId });
     if (!user) return res.status(404).json({ message: 'User not found' });
 
     const token = jwt.sign({ email }, process.env.JWT_SECRET, { expiresIn: '1h' });
-    const link = `http://localhost:3000/reset-password?token=${token}`;
+    const link = `http://localhost:3001/reset-password?token=${token}`;
     await sendEmail(email, 'Reset Your Password', `Click here to reset your password: ${link}`);
 
     res.json({ message: 'Reset password email sent' });
@@ -91,10 +107,10 @@ router.post('/reset-password/:token', async (req, res) => {
   try {
     // Verify token
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    const { email } = decoded;
+    const { email, tenantId } = decoded;
 
     // Find user by email
-    const user = await User.findOne({ email });
+    const user = await User.findOne({ email, tenantId });
     if (!user) return res.status(404).json({ message: 'User not found' });
 
     // Hash new password
@@ -110,48 +126,14 @@ router.post('/reset-password/:token', async (req, res) => {
 });
 
 
-// Fetch user(s) by first name, last name, or both
-router.get('/by-name', async (req, res) => {
-  const { firstName, lastName } = req.query;
-
-  if (!firstName && !lastName) {
-    return res.status(400).json({ error: 'Please provide firstName or lastName or both' });
-  }
-
-  // Build dynamic query
-  const query = {};
-  if (firstName) query.firstName = new RegExp(`^${firstName}$`, 'i'); // case-insensitive exact match
-  if (lastName) query.lastName = new RegExp(`^${lastName}$`, 'i');
-
-  try {
-    const users = await User.find(query);
-
-    if (users.length === 0) {
-      return res.status(404).json({ error: 'No users found' });
-    }
-
-    const result = users.map(user => ({
-      firstName: user.firstName,
-      lastName: user.lastName,
-       phoneNumber: user.phoneNumber,
-      memberNumber: user.memberNumber,
-      userType: user.userType
-    }));
-
-    res.json(result);
-  } catch (err) {
-    console.error('Error fetching user(s) by name:', err);
-    res.status(500).json({ error: 'Internal server error' });
-  }
-});
-
 // Get all users
-router.get('/users', async (req, res) => {
+router.get('/users', verifyToken, async (req, res) => {
+  const tenantId = req.tenantId;
+
   try {
-    const users = await User.find().select('-password'); // Exclude password
+    const users = await User.find({ tenantId }).select('-password');
     res.json(users);
   } catch (err) {
-    console.error('Error fetching users:', err);
     res.status(500).json({ message: 'Internal server error' });
   }
 });

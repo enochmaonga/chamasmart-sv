@@ -1,68 +1,111 @@
-POST http://localhost:8000/api/register
+POST http://localhost:8001/api/tenants/register-tenant
 Content-Type: application/json
 
 {
-  "firstName": "Enoch",
-  "middleName": "Maonga",
-  "lastName": "Mokua",
-  "email": "maongaenoch@gmail.com",
-  "phoneNumber": "0722737989"
+  "name": "Chama-09"
   
-
 }
 
 ###
-GET http://localhost:8000/api/users
+POST http://localhost:8001/api/register
+Content-Type: application/json
+
+{
+  "tenantId": "TN002",
+  "firstName": "Misaro",
+  "middleName": "Enoch",
+  "lastName": "Maonga",
+  "email": "enoch.maonga@gmail.com",
+  "phoneNumber": "0717688888",
+  "userType": "admin"
+}
+
+###
+### Get all users for a tenant
+GET http://localhost:8001/api/users
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRlc3RAZW1haWwuY29tIiwidGVuYW50SWQiOiJBMSIsImlhdCI6MTcyMzg4MTY0MiwiZXhwIjoxNzIzOTY4MDQyfQ.-JgYJ39YpGf8Qd4MOhO5cGpQ2S-b7hNSP9VznLzOZL4
+Accept: application/json
 
 ### Get user by phone number
 GET http://localhost:8000/api/by-name?firstName=Mary
 Content-Type: application/json
 
 ###
-POST http://localhost:8000/api/contributions
+POST http://localhost:8001/api/contributions
 Content-Type: application/json
 
 {
-  "firstName": "Nancy",
-  "lastName": "Nyakundi",
-  "memberNumber": "53",
-  "phoneNumber": "0726",
-  "amount": "3501",
-  "month": "March",
-  "year": "2023"
+  "firstName": "Enoch",
+  "lastName": "Mokua",
+  "tenantId": "TN001",
+  "memberNumber": "MN001",
+  "phoneNumber": "0708090909",
+  "amount": "5000",
+  "month": "February",
+  "year": "2025"
 
 }
 
 ###
-GET http://localhost:8000/api/contributions
+### CASE 4: All members for given year (all months)
+GET http://localhost:8001/api/contributions?tenantId=TENANT2A&year=2025
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4OThkMWFjMjg0MmFlYjhlYzMxNmE2ZCIsImVtYWlsIjoibWFvbmdhZW5vY2hAZ21haWwuY29tIiwiaWF0IjoxNzU1MDc0OTI3LCJleHAiOjE3NTUxNjEzMjd9.zhj7_DBz8s8dHIJXPBAlDweb7pFr47_Vhvjy8ycCSJY
+
+Content-Type: application/json
+###
+GET http://localhost:8001/api/contributions?year=2025
+
 
 ###
-GET http://localhost:8000/api/contributions?year=2025
-
-
-###
-http://localhost:8000/api/contributions?year=2025&month=May
-
+GET http://localhost:8001/api/contributions?tenantId=TN001&year=2023
+Content-Type: application/json
 
 ### Get dashboard stats
-GET http://localhost:8000/api/dashboard/stats
+GET http://localhost:8001/api/dashboard/stats
 
 ###
-POST http://localhost:8000/api/login
+POST http://localhost:8001/api/login
 Content-Type: application/json
 
 {
-  "email": "emmamaonga@gmail.com",
-  "password": "2008Emma"
-
+  "email": "maongaenoch@gmail.com",
+  "password": "Me0708090909"
 }
 
 ###
-POST http://localhost:8000/api/reset-password
+POST http://localhost:8001/api/reset-password
 Content-Type: application/json
 
 {
-  "newPassword": "Me0708090909#*",
-  "confirmPassword": "Me0708090909#*"
+  "newPassword": "Me0708090909",
+  "confirmPassword": "Me0708090909"
 
 }
+
+### CASE 1: Specific member + month
+GET http://localhost:8001/api/contributions?tenantId=TENANT123&year=2025&month=jan&memberNumber=1001
+Authorization: Bearer YOUR_JWT_TOKEN
+Content-Type: application/json
+
+###
+
+### CASE 2: All members for given year + month
+GET http://localhost:8001/api/contributions?tenantId=TENANT2B&year=2025&month=jan
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4OThkMWFjMjg0MmFlYjhlYzMxNmE2ZCIsImVtYWlsIjoibWFvbmdhZW5vY2hAZ21haWwuY29tIiwiaWF0IjoxNzU1MDc0OTI3LCJleHAiOjE3NTUxNjEzMjd9.zhj7_DBz8s8dHIJXPBAlDweb7pFr47_Vhvjy8ycCSJY
+Content-Type: application/json
+
+###
+
+### CASE 3: All months in a year for a member
+GET http://localhost:8001/api/contributions?tenantId=TENANT2A&year=2025&memberNumber=1001
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4OThkMWFjMjg0MmFlYjhlYzMxNmE2ZCIsImVtYWlsIjoibWFvbmdhZW5vY2hAZ21haWwuY29tIiwiaWF0IjoxNzU1MDc0OTI3LCJleHAiOjE3NTUxNjEzMjd9.zhj7_DBz8s8dHIJXPBAlDweb7pFr47_Vhvjy8ycCSJY
+Content-Type: application/json
+
+###
+GET http://localhost:8001/api/dashboard/stats?tenantId=TN001
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4OThkMWFjMjg0MmFlYjhlYzMxNmE2ZCIsImVtYWlsIjoibWFvbmdhZW5vY2hAZ21haWwuY29tIiwiaWF0IjoxNzU1MDc0OTI3LCJleHAiOjE3NTUxNjEzMjd9.zhj7_DBz8s8dHIJXPBAlDweb7pFr47_Vhvjy8ycCSJY
+Content-Type: application/json
+
+### Get all tenants
+GET http://localhost:8001/api/tenants
+Accept: application/json
