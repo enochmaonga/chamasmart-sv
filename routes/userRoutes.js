@@ -44,7 +44,7 @@ router.post('/register', async (req, res) => {
 
     // Send password setup email
     const token = jwt.sign({ email, tenantId }, process.env.JWT_SECRET, { expiresIn: '24h' });
-    const link = `https://chamasmart.vercel.app/create-password?token=${token}`;
+    const link = `https://chamasmart.vercel.app/set-password?token=${token}`;
     await sendEmail(email, 'Set Your Password', `Click here to set your password: ${link}`);
 
     res.status(201).json({
