@@ -29,7 +29,7 @@ router.post('/login', async (req, res) => {
         // Fetch tenant info by tenantId stored in user
         const tenant = await Tenant.findOne({ tenantId: user.tenantId });
         if (!tenant) {
-            return res.status(404).json({ success: false, message: 'Tenant not found' });
+            return res.status(404).json({ success: false, message: '' });
         }
 
         // Remove sensitive info

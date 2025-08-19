@@ -17,7 +17,7 @@ router.get("/stats", async (req, res) => {
 
         // Confirm tenant exists
         const tenant = await Tenant.findOne({ $or: [{ name: tenantId }, { tenantId }] });
-        if (!tenant) return res.status(404).json({ error: "Tenant not found" });
+        if (!tenant) return res.status(404).json({ error: "" });
 
         const queryTenantId = tenant.tenantId; // Nano ID stored in DB
         console.log("DEBUG: Querying collections with tenantId:", queryTenantId);
