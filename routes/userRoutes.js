@@ -44,7 +44,7 @@ router.post('/register', async (req, res) => {
 
     // Send password setup email
     const token = jwt.sign({ email, tenantId }, process.env.JWT_SECRET, { expiresIn: '24h' });
-    const link = `http://localhost:3001/create-password?token=${token}`;
+    const link = `https://chamasmart.vercel.app/create-password?token=${token}`;
     await sendEmail(email, 'Set Your Password', `Click here to set your password: ${link}`);
 
     res.status(201).json({
@@ -89,7 +89,7 @@ router.post('/reset-password', async (req, res) => {
     if (!user) return res.status(404).json({ message: 'User not found' });
 
     const token = jwt.sign({ email }, process.env.JWT_SECRET, { expiresIn: '1h' });
-    const link = `http://localhost:3001/reset-password?token=${token}`;
+    const link = `https://chamasmart.vercel.app/reset-password?token=${token}`;
     await sendEmail(email, 'Reset Your Password', `Click here to reset your password: ${link}`);
 
     res.json({ message: 'Reset password email sent' });
