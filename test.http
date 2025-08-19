@@ -6,24 +6,38 @@ Content-Type: application/json
   
 }
 
+### Create Tenant
+POST http://localhost:8001/api/tenants/register-tenant
+Content-Type: application/json
+
+{
+  "name": "The Ntabos",
+  "theme": {
+    "primaryColor": "#f6851bff",
+    "accentColor": "#f5f5f5",
+    "logo": "/public/logos/chama.png"
+  },
+  "currency": "Kshs"
+}
+
 ###
 POST http://localhost:8001/api/register
 Content-Type: application/json
 
 {
-  "tenantId": "TN002",
-  "firstName": "Misaro",
-  "middleName": "Enoch",
-  "lastName": "Maonga",
-  "email": "enoch.maonga@gmail.com",
-  "phoneNumber": "0717688888",
+  "tenantId": "TN003",
+  "firstName": "Samson",
+  "middleName": "Okong'o",
+  "lastName": "Bundi",
+  "email": "alsenservices@gmail.com",
+  "phoneNumber": "0717680088",
   "userType": "admin"
 }
 
 ###
 ### Get all users for a tenant
 GET http://localhost:8001/api/users
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRlc3RAZW1haWwuY29tIiwidGVuYW50SWQiOiJBMSIsImlhdCI6MTcyMzg4MTY0MiwiZXhwIjoxNzIzOTY4MDQyfQ.-JgYJ39YpGf8Qd4MOhO5cGpQ2S-b7hNSP9VznLzOZL4
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4OThkMWFjMjg0MmFlYjhlYzMxNmE2ZCIsImVtYWlsIjoibWFvbmdhZW5vY2hAZ21haWwuY29tIiwidGVuYW50SWQiOiJUTjAwMSIsImlhdCI6MTc1NTU5MTk1OSwiZXhwIjoxNzU1Njc4MzU5fQ.mHZCTvEz79AZDsu6meHNlcS-ZuVGqNOQRkI9W0zvxU4
 Accept: application/json
 
 ### Get user by phone number

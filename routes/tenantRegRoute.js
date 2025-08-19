@@ -1,10 +1,11 @@
+// routes/tenantRoutes.js
 const express = require('express');
 const router = express.Router();
 const Tenant = require('../models/tenantModel');
 
 // Register new tenant
 router.post('/register-tenant', async (req, res) => {
-    const { name } = req.body;
+    const { name, theme, currency } = req.body; // 👈 allow theme + currency from frontend
 
     if (!name) {
         return res.status(400).json({ message: 'Tenant name is required' });
@@ -16,6 +17,7 @@ router.post('/register-tenant', async (req, res) => {
             return res.status(409).json({ message: 'Tenant already exists' });
         }
 
+        // Auto-generate tenantId
         const lastTenant = await Tenant.findOne({})
             .sort({ tenantId: -1 })
             .collation({ locale: "en_US", numericOrdering: true });
@@ -30,12 +32,24 @@ router.post('/register-tenant', async (req, res) => {
         }
 
         const tenantId = `TN${String(newNumber).padStart(3, '0')}`;
-        const tenant = new Tenant({ name, tenantId });
+
+        // Create tenant with theme + currency
+        const tenant = new Tenant({
+            name,
+            tenantId,
+            theme: {
+                primaryColor: theme?.primaryColor || "#5560bfff",
+                accentColor: theme?.accentColor || "#666666",
+                logo: theme?.logo || "/logos/default.png",
+            },
+            currency: currency || "Kshs",
+        });
+
         await tenant.save();
 
         res.status(201).json({
             message: 'Tenant registered successfully',
-            tenantId
+            tenant,
         });
     } catch (err) {
         console.error(err);
