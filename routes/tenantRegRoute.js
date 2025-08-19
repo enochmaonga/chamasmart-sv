@@ -38,7 +38,7 @@ router.post('/register-tenant', async (req, res) => {
             name,
             tenantId,
             theme: {
-                primaryColor: theme?.primaryColor || "#5560bfff",
+                primaryColor: theme?.primaryColor || "#616161",
                 accentColor: theme?.accentColor || "#666666",
                 logo: theme?.logo || "/logos/default.png",
             },
