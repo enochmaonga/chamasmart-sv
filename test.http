@@ -26,11 +26,11 @@ Content-Type: application/json
 
 {
   "tenantId": "TN003",
-  "firstName": "Samson",
-  "middleName": "Okong'o",
-  "lastName": "Bundi",
+  "firstName": "Enoch1",
+  "middleName": "misaro",
+  "lastName": "Mokua",
   "email": "alsenservices@gmail.com",
-  "phoneNumber": "0717680088",
+  "phoneNumber": "0796220000",
   "userType": "admin"
 }
 
@@ -49,12 +49,12 @@ POST http://localhost:8001/api/contributions
 Content-Type: application/json
 
 {
-  "firstName": "Enoch",
-  "lastName": "Mokua",
-  "tenantId": "TN001",
-  "memberNumber": "MN001",
-  "phoneNumber": "0708090909",
-  "amount": "5000",
+  "firstName": "Misaro",
+  "lastName": "Maonga",
+  "tenantId": "TN002",
+  "memberNumber": "MN004",
+  "phoneNumber": "0717688888",
+  "amount": "500",
   "month": "February",
   "year": "2025"
 

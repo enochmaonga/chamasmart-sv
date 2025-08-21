@@ -138,4 +138,25 @@ router.get('/users', verifyToken, async (req, res) => {
   }
 });
 
+// GET /api/users/by-name?tenantId=xxx&firstName=Jo
+router.get('/users/by-name', async (req, res) => {
+  try {
+    const { tenantId, firstName } = req.query;
+
+    if (!tenantId || !firstName) {
+      return res.status(400).json({ message: "tenantId and firstName are required" });
+    }
+
+    const users = await User.find({
+      tenantId,
+      firstName: { $regex: firstName, $options: "i" } // case-insensitive match
+    }).select("firstName lastName memberNumber phoneNumber email");
+
+    res.json(users);
+  } catch (error) {
+    console.error("❌ Error searching users by name:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
 module.exports = router;
