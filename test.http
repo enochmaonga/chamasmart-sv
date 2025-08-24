@@ -37,8 +37,7 @@ Content-Type: application/json
 ###
 ### Get all users for a tenant
 GET http://localhost:8001/api/users
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4OThkMWFjMjg0MmFlYjhlYzMxNmE2ZCIsImVtYWlsIjoibWFvbmdhZW5vY2hAZ21haWwuY29tIiwidGVuYW50SWQiOiJUTjAwMSIsImlhdCI6MTc1NTU5MTk1OSwiZXhwIjoxNzU1Njc4MzU5fQ.mHZCTvEz79AZDsu6meHNlcS-ZuVGqNOQRkI9W0zvxU4
-Accept: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4YTZmNzY5ODRhMjJlMzVjZmQ3YmUyMiIsImVtYWlsIjoiYWxzZW5zZXJ2aWNlc0BnbWFpbC5jb20iLCJ0ZW5hbnRJZCI6IlROMDAzIiwiaWF0IjoxNzU1Nzg3Njk5LCJleHAiOjE3NTU4NzQwOTl9.Ngc4lelfDnXbd5JqHJlFuLu20mPQ0AiaCSd2aDL62fs
 
 ### Get user by phone number
 GET http://localhost:8000/api/by-name?firstName=Mary
@@ -86,15 +85,15 @@ Content-Type: application/json
   "password": "Me0708090909"
 }
 
-###
+### Request Password Reset (tenant in body)
 POST http://localhost:8001/api/reset-password
 Content-Type: application/json
 
 {
-  "newPassword": "Me0708090909",
-  "confirmPassword": "Me0708090909"
-
+  "email": "enoch.maonga@gmail.com",
+  "tenantId": "TN002"
 }
+
 
 ### CASE 1: Specific member + month
 GET http://localhost:8001/api/contributions?tenantId=TENANT123&year=2025&month=jan&memberNumber=1001
@@ -123,3 +122,21 @@ Content-Type: application/json
 ### Get all tenants
 GET http://localhost:8001/api/tenants
 Accept: application/json
+
+
+### 1. Request reset password (send reset email)
+POST http://localhost:8001/api/reset-password
+Content-Type: application/json
+
+{
+  "tenantId": "TN002",
+  "email": "enoch.maonga@gmail.com"
+}
+
+### 2. Reset password with token (replace TOKEN with actual JWT from email/logs)
+POST http://localhost:8001/api/reset-password/eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImVub2NoLm1hb25nYUBnbWFpbC5jb20iLCJpYXQiOjE3NTYwNTU3MzQsImV4cCI6MTc1NjA1OTMzNH0._yAH84nNYkf_wLxX1vutkMC-wF90BojXcngzjS6A358
+Content-Type: application/json
+
+{
+  "password": "Me0708090909#"
+}

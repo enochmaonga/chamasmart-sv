@@ -81,15 +81,15 @@ router.post('/set-password', async (req, res) => {
 
 // Reset password (send reset email)
 router.post('/reset-password', async (req, res) => {
-  const { email } = req.body;
-  const tenantId = req.tenantId;
+  const { email, tenantId } = req.body;
 
   try {
     const user = await User.findOne({ email, tenantId });
     if (!user) return res.status(404).json({ message: 'User not found' });
 
-    const token = jwt.sign({ email }, process.env.JWT_SECRET, { expiresIn: '1h' });
-    const link = `https://chamasmart.vercel.app/reset-password?token=${token}`;
+    // include tenantId in token
+    const token = jwt.sign({ email, tenantId }, process.env.JWT_SECRET, { expiresIn: '1h' });
+    const link = `http://localhost:3001/reset-password?token=${token}`;
     await sendEmail(email, 'Reset Your Password', `Click here to reset your password: ${link}`);
 
     res.json({ message: 'Reset password email sent' });
@@ -98,6 +98,7 @@ router.post('/reset-password', async (req, res) => {
     res.status(500).json({ message: 'Error sending reset email', error: err.message });
   }
 });
+
 
 // Reset password using token
 router.post('/reset-password/:token', async (req, res) => {
