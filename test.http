@@ -120,7 +120,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4OThkMWFjM
 Content-Type: application/json
 
 ### Get all tenants
-GET http://localhost:8001/api/tenants
+GET http://localhost:8001/api/tenants/TN002
 Accept: application/json
 
 
@@ -139,4 +139,37 @@ Content-Type: application/json
 
 {
   "password": "Me0708090909#"
+}
+
+### 1. Create a new expense
+POST http://localhost:8001/api/expense
+Content-Type: application/json
+
+{
+  "tenantId": "TN002",
+  "expenseType": "MGR",
+  "amount": 5000,
+  "date": "2025-08-24",
+  "beneficiary": "Misaro Maonga",
+  "description": "Merry Go Round"
+}
+
+
+### 3. Get all expenses for tenant
+GET http://localhost:8001/api/expense?tenantId=TN002
+
+### 4. Get expense for a specific year
+GET http://localhost:8001/api/expense?tenantId=abc123&year=2025
+
+### 5. Get expense for a specific month (August 2025)
+GET http://localhost:8001/api/expense?tenantId=abc123&year=2025&month=08
+
+### 6. Update an expense (replace :id with real ID returned from POST)
+PUT http://localhost:8001/api/expense/68ab55d91465332608dd03d6
+Content-Type: application/json
+
+{
+  "tenantId": "TN002",
+  "amount": 5100,
+  "description": "Updated MGR amount"
 }
