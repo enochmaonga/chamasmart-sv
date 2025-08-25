@@ -13,13 +13,19 @@ const userSchema = new mongoose.Schema({
     enum: ['user', 'admin'],
     default: 'user',
   },
+  state: {
+    type: String,
+    enum: ['Active', 'Inactive'],
+    default: 'Active',
+  },
   createdAt: { type: Date, default: Date.now },
 });
 
 // Make memberNumber unique per tenant
 userSchema.index({ tenantId: 1, memberNumber: 1 }, { unique: true });
 
-// Also make email unique per tenant (optional)
+// Also make email unique per tenant
 userSchema.index({ tenantId: 1, email: 1 }, { unique: true });
 
 module.exports = mongoose.model('User', userSchema);
+

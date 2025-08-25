@@ -37,7 +37,7 @@ Content-Type: application/json
 ###
 ### Get all users for a tenant
 GET http://localhost:8001/api/users
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4YTZmNzY5ODRhMjJlMzVjZmQ3YmUyMiIsImVtYWlsIjoiYWxzZW5zZXJ2aWNlc0BnbWFpbC5jb20iLCJ0ZW5hbnRJZCI6IlROMDAzIiwiaWF0IjoxNzU1Nzg3Njk5LCJleHAiOjE3NTU4NzQwOTl9.Ngc4lelfDnXbd5JqHJlFuLu20mPQ0AiaCSd2aDL62fs
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4OThkMWFjMjg0MmFlYjhlYzMxNmE2ZCIsImVtYWlsIjoibWFvbmdhZW5vY2hAZ21haWwuY29tIiwidGVuYW50SWQiOiJUTjAwMSIsImlhdCI6MTc1NjEyMzc2MiwiZXhwIjoxNzU2MjEwMTYyfQ.1FP5S-9FGOyCVyur84jz4zYz1vzPfjY1rS74k97IX9Q
 
 ### Get user by phone number
 GET http://localhost:8000/api/by-name?firstName=Mary
@@ -81,7 +81,7 @@ POST http://localhost:8001/api/login
 Content-Type: application/json
 
 {
-  "email": "alsenservices@gmail.com",
+  "email": "maongaenoch@gmail.com",
   "password": "Me0708090909"
 }
 
@@ -173,3 +173,28 @@ Content-Type: application/json
   "amount": 5100,
   "description": "Updated MGR amount"
 }
+
+
+### 7️⃣ Update user info (patch)
+PATCH http://localhost:8001/api/users/MN019
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4YTZmNzY5ODRhMjJlMzVjZmQ3YmUyMiIsImVtYWlsIjoiYWxzZW5zZXJ2aWNlc0BnbWFpbC5jb20iLCJ0ZW5hbnRJZCI6IlROMDAzIiwiaWF0IjoxNzU2MTIyNDM0LCJleHAiOjE3NTYyMDg4MzR9.nv6t1KWKTqcjw3zrd-UL3lN9TwtdTDkjn2E66TDkr2Y
+
+{
+  "firstName": "Admin",
+  "lastName": "Admin1",
+  "phoneNumber": "0717608888",
+  "state": "Active"
+}
+
+### 8️⃣ Suspend a user
+PATCH http://localhost:8001/api/users/MN013/suspend
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4OThkMWFjMjg0MmFlYjhlYzMxNmE2ZCIsImVtYWlsIjoibWFvbmdhZW5vY2hAZ21haWwuY29tIiwidGVuYW50SWQiOiJUTjAwMSIsImlhdCI6MTc1NjEyMzc2MiwiZXhwIjoxNzU2MjEwMTYyfQ.1FP5S-9FGOyCVyur84jz4zYz1vzPfjY1rS74k97IX9Q
+
+### 9️⃣ Activate a user
+PATCH http://localhost:8001/api/users/MN013/activate
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4OThkMWFjMjg0MmFlYjhlYzMxNmE2ZCIsImVtYWlsIjoibWFvbmdhZW5vY2hAZ21haWwuY29tIiwidGVuYW50SWQiOiJUTjAwMSIsImlhdCI6MTc1NjEyMzc2MiwiZXhwIjoxNzU2MjEwMTYyfQ.1FP5S-9FGOyCVyur84jz4zYz1vzPfjY1rS74k97IX9Q
+
+### 🔟 Delete a user
+DELETE http://localhost:8001/api/users/MN013
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4OThkMWFjMjg0MmFlYjhlYzMxNmE2ZCIsImVtYWlsIjoibWFvbmdhZW5vY2hAZ21haWwuY29tIiwidGVuYW50SWQiOiJUTjAwMSIsImlhdCI6MTc1NjEyMzc2MiwiZXhwIjoxNzU2MjEwMTYyfQ.1FP5S-9FGOyCVyur84jz4zYz1vzPfjY1rS74k97IX9Q

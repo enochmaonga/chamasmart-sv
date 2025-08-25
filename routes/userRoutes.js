@@ -6,6 +6,7 @@ const bcrypt = require('bcrypt');
 const sendEmail = require('../utils/sendEmail');
 const User = require('../models/user');
 const { verifyToken } = require('../middleware/authMiddleware');
+const mongoose = require('mongoose');
 
 // Register user
 router.post('/register', async (req, res) => {
@@ -157,6 +158,123 @@ router.get('/users/by-name', async (req, res) => {
   } catch (error) {
     console.error("❌ Error searching users by name:", error);
     res.status(500).json({ message: "Server error" });
+  }
+});
+
+// Delete user
+router.delete('/users/:id', verifyToken, async (req, res) => {
+  const { id } = req.params;
+  const tenantId = req.user?.tenantId; // ensure verifyToken attaches tenantId
+
+  try {
+    const query = {
+      tenantId,
+      $or: [
+        { _id: mongoose.Types.ObjectId.isValid(id) ? id : null },
+        { memberNumber: id }
+      ]
+    };
+
+    const user = await User.findOneAndDelete(query);
+
+    if (!user) return res.status(404).json({ message: 'User not found' });
+
+    res.json({ message: 'User deleted successfully' });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
+
+
+// Suspend user (set state to Inactive)
+router.patch('/users/:id/suspend', verifyToken, async (req, res) => {
+  const { id } = req.params;
+  const tenantId = req.user?.tenantId; // make sure verifyToken sets req.user
+
+  try {
+    const query = {
+      tenantId,
+      $or: [
+        { _id: mongoose.Types.ObjectId.isValid(id) ? id : null },
+        { memberNumber: id }
+      ]
+    };
+
+    const user = await User.findOneAndUpdate(
+      query,
+      { state: 'Inactive' },
+      { new: true }
+    );
+
+    if (!user) return res.status(404).json({ message: 'User not found' });
+
+    res.json({ message: 'User suspended', user });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
+
+// Activate user (set state to Active)
+router.patch('/users/:id/activate', verifyToken, async (req, res) => {
+  const { id } = req.params;
+  const tenantId = req.user?.tenantId;
+
+  try {
+    const query = {
+      tenantId,
+      $or: [
+        { _id: mongoose.Types.ObjectId.isValid(id) ? id : null },
+        { memberNumber: id }
+      ]
+    };
+
+    const user = await User.findOneAndUpdate(
+      query,
+      { state: 'Active' },
+      { new: true }
+    );
+
+    if (!user) return res.status(404).json({ message: 'User not found' });
+
+    res.json({ message: 'User activated', user });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
+
+//update user details 
+router.patch('/users/:id', verifyToken, async (req, res) => {
+  const { id } = req.params;
+  const tenantId = req.user?.tenantId; // make sure verifyToken sets req.user
+
+  // Only allow updates on these fields
+  const allowedFields = ['firstName', 'lastName', 'phoneNumber', 'state'];
+  const updates = {};
+  for (let key of allowedFields) {
+    if (req.body[key] !== undefined) updates[key] = req.body[key];
+  }
+
+  try {
+    // Find by ObjectId or by memberNumber for custom IDs like MN019
+    const query = {
+      tenantId,
+      $or: [
+        { _id: mongoose.Types.ObjectId.isValid(id) ? id : null },
+        { memberNumber: id }
+      ]
+    };
+
+    const user = await User.findOneAndUpdate(query, { $set: updates }, { new: true });
+
+    if (!user) return res.status(404).json({ message: 'User not found' });
+
+    res.json({ message: 'User updated', user });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Internal server error' });
   }
 });
 
