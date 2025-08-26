@@ -19,7 +19,7 @@ app.use(express.json());
 // Middleware
 app.use(cors({
   origin: ['https://chamasmart.vercel.app',
-  'http://localhost:3001'],
+  'http://localhost:3000'],
   credentials: true, // if you're sending cookies or headers
 }));
 

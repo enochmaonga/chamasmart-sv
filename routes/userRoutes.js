@@ -90,7 +90,7 @@ router.post('/reset-password', async (req, res) => {
 
     // include tenantId in token
     const token = jwt.sign({ email, tenantId }, process.env.JWT_SECRET, { expiresIn: '1h' });
-    const link = `http://localhost:3001/reset-password?token=${token}`;
+    const link = `https://chamasmart.vercel.app/reset-password?token=${token}`;
     await sendEmail(email, 'Reset Your Password', `Click here to reset your password: ${link}`);
 
     res.json({ message: 'Reset password email sent' });
