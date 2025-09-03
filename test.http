@@ -2,7 +2,7 @@ POST http://localhost:8001/api/tenants/register-tenant
 Content-Type: application/json
 
 {
-  "name": "Chama-09"
+  "name": "System Admin"
   
 }
 
@@ -11,10 +11,10 @@ POST http://localhost:8001/api/tenants/register-tenant
 Content-Type: application/json
 
 {
-  "name": "The Ntabos",
+  "name": "System Admin",
   "theme": {
-    "primaryColor": "#f6851bff",
-    "accentColor": "#f5f5f5",
+    "primaryColor": "#3a48b4ff",
+    "accentColor": "#785878ff",
     "logo": "/public/logos/chama.png"
   },
   "currency": "Kshs"
@@ -25,20 +25,19 @@ POST http://localhost:8001/api/register
 Content-Type: application/json
 
 {
-  "tenantId": "TN003",
-  "firstName": "Enoch1",
-  "middleName": "misaro",
+  "tenantId": "TN000",
+  "firstName": "Maonga",
+  "middleName": "Enoch",
   "lastName": "Mokua",
-  "email": "alsenservices@gmail.com",
-  "phoneNumber": "0796220000",
-  "userType": "admin"
+  "email": "chamasmart.mt@gmail.com",
+  "phoneNumber": "0722737989",
+  "userType": "super"
 }
 
 ###
 ### Get all users for a tenant
 GET http://localhost:8001/api/users
-Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4OThkMWFjMjg0MmFlYjhlYzMxNmE2ZCIsImVtYWlsIjoibWFvbmdhZW5vY2hAZ21haWwuY29tIiwidGVuYW50SWQiOiJUTjAwMSIsImlhdCI6MTc1NjEyMzc2MiwiZXhwIjoxNzU2MjEwMTYyfQ.1FP5S-9FGOyCVyur84jz4zYz1vzPfjY1rS74k97IX9Q
-
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4OThkMWFjMjg0MmFlYjhlYzMxNmE2ZCIsImVtYWlsIjoibWFvbmdhZW5vY2hAZ21haWwuY29tIiwidGVuYW50SWQiOiJUTjAwMSIsImlhdCI6MTc1NjgxODkxMywiZXhwIjoxNzU2OTA1MzEzfQ.nSJGSr70_q8QRDlZXiHAbKL-RyeS0A1Bpm_qQF4rXrE
 ### Get user by phone number
 GET http://localhost:8000/api/by-name?firstName=Mary
 Content-Type: application/json
@@ -81,7 +80,7 @@ POST http://localhost:8001/api/login
 Content-Type: application/json
 
 {
-  "email": "maongaenoch@gmail.com",
+  "email": "chamasmart.mt@gmail.com",
   "password": "Me0708090909"
 }
 
@@ -120,8 +119,8 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4OThkMWFjM
 Content-Type: application/json
 
 ### Get all tenants
-GET http://localhost:8001/api/tenants/TN002
-Accept: application/json
+GET http://localhost:8001/api/tenants
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4YjcyZThjMWEzYTIzMDVjZDliY2UwZCIsImVtYWlsIjoiY2hhbWFzbWFydC5tdEBnbWFpbC5jb20iLCJ0ZW5hbnRJZCI6IlROMDAwIiwiaWF0IjoxNzU2ODQwNzUwLCJleHAiOjE3NTY5MjcxNTB9.SdVKW5IBj-DYsKNtH8ykH4u6ZFqV58KdTXKqr0CDe4A
 
 
 ### 1. Request reset password (send reset email)
@@ -131,6 +130,15 @@ Content-Type: application/json
 {
   "tenantId": "TN002",
   "email": "enoch.maonga@gmail.com"
+}
+### 1. Request reset password (send reset email)
+POST http://localhost:8001/api/set-password/eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4OThkMWFjMjg0MmFlYjhlYzMxNmE2ZCIsImVtYWlsIjoibWFvbmdhZW5vY2hAZ21haWwuY29tIiwidGVuYW50SWQiOiJUTjAwMSIsImlhdCI6MTc1Njc1NTgzNywiZXhwIjoxNzU2ODQyMjM3fQ.xePdQbVZ18z2PGa0rxOeWRnP71saWfYLPHpe_Kug8iY
+Content-Type: application/json
+
+{
+  "tenantId": "TN000",
+  "email": "chamasmart.mt@gmail.com",
+  "password": "Me0708090909"
 }
 
 ### 2. Reset password with token (replace TOKEN with actual JWT from email/logs)
@@ -192,9 +200,37 @@ PATCH http://localhost:8001/api/users/MN013/suspend
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4OThkMWFjMjg0MmFlYjhlYzMxNmE2ZCIsImVtYWlsIjoibWFvbmdhZW5vY2hAZ21haWwuY29tIiwidGVuYW50SWQiOiJUTjAwMSIsImlhdCI6MTc1NjEyMzc2MiwiZXhwIjoxNzU2MjEwMTYyfQ.1FP5S-9FGOyCVyur84jz4zYz1vzPfjY1rS74k97IX9Q
 
 ### 9️⃣ Activate a user
-PATCH http://localhost:8001/api/users/MN013/activate
+PATCH http://localhost:8001/api/users/MN019/activate
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4OThkMWFjMjg0MmFlYjhlYzMxNmE2ZCIsImVtYWlsIjoibWFvbmdhZW5vY2hAZ21haWwuY29tIiwidGVuYW50SWQiOiJUTjAwMSIsImlhdCI6MTc1NjEyMzc2MiwiZXhwIjoxNzU2MjEwMTYyfQ.1FP5S-9FGOyCVyur84jz4zYz1vzPfjY1rS74k97IX9Q
 
 ### 🔟 Delete a user
 DELETE http://localhost:8001/api/users/MN013
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4OThkMWFjMjg0MmFlYjhlYzMxNmE2ZCIsImVtYWlsIjoibWFvbmdhZW5vY2hAZ21haWwuY29tIiwidGVuYW50SWQiOiJUTjAwMSIsImlhdCI6MTc1NjEyMzc2MiwiZXhwIjoxNzU2MjEwMTYyfQ.1FP5S-9FGOyCVyur84jz4zYz1vzPfjY1rS74k97IX9Q
+
+### Super user login
+# @name login
+POST http://localhost:8001/api/login
+Content-Type: application/json
+
+{
+  "email": "chamasmart.mt@gmail.com",
+  "password": "Me0708090909"
+}
+
+### ✅ Pull all tenants
+GET http://localhost:8001/api/tenants
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4YjcyZThjMWEzYTIzMDVjZDliY2UwZCIsImVtYWlsIjoiY2hhbWFzbWFydC5tdEBnbWFpbC5jb20iLCJ1c2VyVHlwZSI6InN1cGVyIiwiaWF0IjoxNzU2OTI0MzYzLCJleHAiOjE3NTcwMTA3NjN9.sbZhMDI-9vC3QfEiyimrTWgmVzmh_siGouI5sqGIF6E
+
+### Super user login
+# @name login
+POST http://localhost:8001/api/login
+Content-Type: application/json
+
+{
+  "email": "chamasmart.mt@gmail.com",
+  "password": "Me0708090909"
+}
+
+### Get all tenants
+GET http://localhost:8001/api/tenants
+Authorization: Bearer {{login.response.body.token}}

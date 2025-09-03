@@ -6,6 +6,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
 // Login route
+// Login route
 router.post('/login', async (req, res) => {
     const { email, password } = req.body;
 
@@ -26,26 +27,35 @@ router.post('/login', async (req, res) => {
             return res.status(401).json({ success: false, message: 'Invalid credentials' });
         }
 
-        // Fetch tenant info by tenantId stored in user
-        const tenant = await Tenant.findOne({ tenantId: user.tenantId });
-        if (!tenant) {
-            return res.status(404).json({ success: false, message: '' });
-        }
-
         // Remove sensitive info
         const { password: _, ...userData } = user.toObject();
 
-        // Generate JWT
+        let tokenPayload = {
+            id: user._id,
+            email: user.email,
+            userType: user.userType // 👈 always present
+        };
+
+        // If normal tenant user, include tenantId
+        if (user.userType !== "super") {
+            const tenant = await Tenant.findOne({ tenantId: user.tenantId });
+            if (!tenant) {
+                return res.status(404).json({ success: false, message: 'Tenant not found' });
+            }
+            tokenPayload.tenantId = tenant.tenantId;
+        }
+
         const token = jwt.sign(
-            { id: user._id, email: user.email, tenantId: tenant.tenantId },
+            tokenPayload,
             process.env.JWT_SECRET || 'your_jwt_secret',
             { expiresIn: '1d' }
         );
 
-        res.json({
+        return res.json({
             success: true,
+            message: `${user.userType === "super" ? "Super user" : "User"} logged in successfully`,
             user: userData,
-            tenantId: tenant.tenantId,
+            tenantId: tokenPayload.tenantId,
             accessToken: token
         });
 
@@ -54,5 +64,6 @@ router.post('/login', async (req, res) => {
         res.status(500).json({ success: false, message: err.message });
     }
 });
+
 
 module.exports = router;

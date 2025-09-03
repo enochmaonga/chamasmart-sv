@@ -10,7 +10,7 @@ const userSchema = new mongoose.Schema({
   memberNumber: { type: String, required: true },
   userType: {
     type: String,
-    enum: ['user', 'admin'],
+    enum: ['user', 'admin', 'super'],
     default: 'user',
   },
   state: {
