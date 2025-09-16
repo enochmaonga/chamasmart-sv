@@ -8,7 +8,7 @@ const contributionRoutes = require('./routes/contributionRoutes');
 const tenantRegRoute = require('./routes/tenantRegRoute');
 const dashboardRoutes = require('./routes/dashboardRoutes');
 const expenseRoute = require('./routes/expenseRoute');
-const superUserDashboard = require('./routes/superUserDashboard');
+const superUserDashboardRoute = require('./routes/superUserDashboardRoute');
 
 
 
@@ -31,7 +31,7 @@ app.use('/api/contributions', contributionRoutes);
 app.use('/api/dashboard', dashboardRoutes);
 app.use('/api/tenants', tenantRegRoute);
 app.use('/api/expense', expenseRoute);
-app.use('/api/superuser', superUserDashboard);
+app.use('/api/superuser', superUserDashboardRoute);
 
 
 // MongoDB Connection
