@@ -39,6 +39,7 @@ router.post("/register-tenant", requireSuperUser, async (req, res) => {
         logo: theme?.logo || "/logos/default.png",
       },
       currency: currency || "Kshs",
+      status: "active",
     });
 
     await tenant.save();
@@ -80,7 +81,7 @@ router.get("/:tenantId", verifyToken, requireSuperUser, async (req, res) => {
 router.put("/:tenantId", verifyToken, requireSuperUser, async (req, res) => {
   try {
     const { tenantId } = req.params;
-    const { name, theme, currency } = req.body;
+    const { name, theme, currency, status } = req.body;
 
     const tenant = await Tenant.findOneAndUpdate(
       { tenantId },
@@ -89,6 +90,7 @@ router.put("/:tenantId", verifyToken, requireSuperUser, async (req, res) => {
           ...(name && { name }),
           ...(theme && { theme }),
           ...(currency && { currency }),
+          ...(status && {status}),
         },
       },
       { new: true }
@@ -119,15 +121,5 @@ router.delete("/:tenantId", verifyToken, requireSuperUser, async (req, res) => {
   }
 });
 
-// // Get all tenants (super user only)
-// router.get('/tenants', verifyToken, requireSuperUser, async (req, res) => {
-//   try {
-//     const tenants = await Tenant.find({});
-//     res.json({ success: true, tenants });
-//   } catch (err) {
-//     console.error(err);
-//     res.status(500).json({ message: 'Internal server error' });
-//   }
-// });
 
 module.exports = router;

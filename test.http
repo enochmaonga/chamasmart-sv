@@ -231,6 +231,7 @@ Content-Type: application/json
   "password": "Me0708090909"
 }
 
-### Get all tenants
-GET http://localhost:8001/api/tenants
-Authorization: Bearer {{login.response.body.token}}
+### Super User Stats - Get totals
+GET http://localhost:8001/api/superuser/super-stats
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4YjcyZThjMWEzYTIzMDVjZDliY2UwZCIsImVtYWlsIjoiY2hhbWFzbWFydC5tdEBnbWFpbC5jb20iLCJ1c2VyVHlwZSI6InN1cGVyIiwiaWF0IjoxNzU2OTgxMjY4LCJleHAiOjE3NTcwNjc2Njh9.4n8x4vAGx3z9bZCSitwwlRrPmTvKgKx97L4lJCo1xGg
+Content-Type: application/json
