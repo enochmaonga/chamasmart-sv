@@ -25,13 +25,13 @@ POST http://localhost:8001/api/register
 Content-Type: application/json
 
 {
-  "tenantId": "TN000",
-  "firstName": "Maonga",
-  "middleName": "Enoch",
-  "lastName": "Mokua",
-  "email": "chamasmart.mt@gmail.com",
-  "phoneNumber": "0722737989",
-  "userType": "super"
+  "tenantId": "TN001",
+  "firstName": "Mark",
+  "middleName": "Mogere",
+  "lastName": "Mosoti",
+  "email": "marksmos2000@gmail.com",
+  "phoneNumber": "0720xxxxx",
+  "userType": "admin"
 }
 
 ###
