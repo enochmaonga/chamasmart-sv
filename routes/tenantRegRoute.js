@@ -62,13 +62,24 @@ router.get("/", verifyToken, requireSuperUser, async (req, res) => {
   }
 });
 
-// ✅ Get single tenant
-router.get("/:tenantId", verifyToken, requireSuperUser, async (req, res) => {
+// ✅ Get a single tenant
+router.get("/:tenantId", verifyToken, async (req, res) => {
   try {
     const { tenantId } = req.params;
-    const tenant = await Tenant.findOne({ tenantId });
+    const user = req.user; // verifyToken attaches user object with roles/tenantId
 
-    if (!tenant) return res.status(404).json({ message: "Tenant not found" });
+    // 1️⃣ If the user is a super user, allow any tenantId
+    // 2️⃣ If not a super user, only allow their own tenantId
+    if (!user.isSuperUser && user.tenantId !== tenantId) {
+      return res
+        .status(403)
+        .json({ message: "Not authorized to access this tenant" });
+    }
+
+    const tenant = await Tenant.findOne({ tenantId });
+    if (!tenant) {
+      return res.status(404).json({ message: "Tenant not found" });
+    }
 
     res.json(tenant);
   } catch (err) {
@@ -76,6 +87,7 @@ router.get("/:tenantId", verifyToken, requireSuperUser, async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 });
+
 
 // ✅ Update tenant
 router.put("/:tenantId", verifyToken, requireSuperUser, async (req, res) => {
@@ -120,6 +132,28 @@ router.delete("/:tenantId", verifyToken, requireSuperUser, async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 });
+
+// Get tenant info for the logged-in user
+router.get("/my-tenant", verifyToken, async (req, res) => {
+  try {
+    const user = req.user; // assume verifyToken attaches user info
+    if (!user.tenantId) return res.status(400).json({ message: "User has no tenant assigned" });
+
+    const tenant = await Tenant.findOne({ tenantId: user.tenantId });
+    if (!tenant) return res.status(404).json({ message: "Tenant not found" });
+
+    res.json({
+      id: tenant.tenantId,
+      name: tenant.name,
+      theme: tenant.theme,
+      currency: tenant.currency,
+    });
+  } catch (err) {
+    console.error("Error fetching user tenant:", err);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
 
 
 module.exports = router;
