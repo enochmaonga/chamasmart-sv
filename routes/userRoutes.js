@@ -41,17 +41,17 @@ router.post('/register', async (req, res) => {
       createdAt: new Date(),
     });
 
-    await newUser.save();
+await newUser.save();
 
-    // Send password setup email
-    const token = jwt.sign({ email, tenantId }, process.env.JWT_SECRET, { expiresIn: '24h' });
-    const link = `https://chamasmart.vercel.app/set-password?token=${token}`;
-    await sendEmail(email, 'Set Your Password', `Click here to set your password: ${link}`);
+// Send password setup email
+const token = jwt.sign({ email, tenantId }, process.env.JWT_SECRET, { expiresIn: '24h' });
+const link = `https://chamasmart.vercel.app/set-password?token=${token}`;
+await sendEmail(email, 'Set Your Password', `Click here to set your password: ${link}`);
 
-    res.status(201).json({
-      message: 'User created and email sent.',
-      memberNumber
-    });
+res.status(201).json({
+  message: 'User created and email sent.',
+  memberNumber
+});
 
   } catch (error) {
     console.error(error);
