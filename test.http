@@ -25,12 +25,12 @@ POST http://localhost:8001/api/register
 Content-Type: application/json
 
 {
-  "tenantId": "TN001",
+  "tenantId": "TN002",
   "firstName": "Mark",
   "middleName": "Mogere",
   "lastName": "Mosoti",
-  "email": "marksmos2000@gmail.com",
-  "phoneNumber": "0720xxxxx",
+  "email": "eswagroupcompany@gmail.com",
+  "phoneNumber": "07227008822",
   "userType": "admin"
 }
 
