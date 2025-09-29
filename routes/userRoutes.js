@@ -80,50 +80,30 @@ router.post('/set-password', async (req, res) => {
   }
 });
 
-// Reset password (send reset email)
+// POST /api/reset-password
 router.post('/reset-password', async (req, res) => {
-  const { email, tenantId } = req.body;
+  const { email, memberNumber, newPassword } = req.body;
 
-  try {
-    const user = await User.findOne({ email, tenantId });
-    if (!user) return res.status(404).json({ message: 'User not found' });
-
-    // include tenantId in token
-    const token = jwt.sign({ email, tenantId }, process.env.JWT_SECRET, { expiresIn: '1h' });
-    const link = `https://chamasmart.vercel.app/reset-password?token=${token}`;
-    await sendEmail(email, 'Reset Your Password', `Click here to reset your password: ${link}`);
-
-    res.json({ message: 'Reset password email sent' });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: 'Error sending reset email', error: err.message });
+  if (!email || !memberNumber || !newPassword) {
+    return res.status(400).json({ message: 'All fields are required' });
   }
-});
-
-
-// Reset password using token
-router.post('/reset-password/:token', async (req, res) => {
-  const { token } = req.params;
-  const { password } = req.body;
 
   try {
-    // Verify token
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    const { email, tenantId } = decoded;
+    // Find user by tenant, email, and member number
+    const user = await User.findOne({ email, memberNumber });
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
 
-    // Find user by email
-    const user = await User.findOne({ email, tenantId });
-    if (!user) return res.status(404).json({ message: 'User not found' });
-
-    // Hash new password
-    const hashedPassword = await bcrypt.hash(password, 10);
-    user.password = hashedPassword;
+    // Hash and save the new password
+    const hashed = await bcrypt.hash(newPassword, 10);
+    user.password = hashed;
     await user.save();
 
     res.json({ message: 'Password reset successfully' });
   } catch (err) {
-    console.error(err);
-    res.status(400).json({ message: 'Invalid or expired token' });
+    console.error('Reset error:', err);
+    res.status(500).json({ message: 'Internal server error' });
   }
 });
 
