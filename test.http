@@ -9,12 +9,13 @@ Content-Type: application/json
 ### Create Tenant
 POST http://localhost:8001/api/tenants/register-tenant
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5MDA3YTJhN2ZiNjRiZGVmMWI0ZTQ5YSIsImVtYWlsIjoibWFvbmdhZW5vY2hAeWFob28uY29tIiwidXNlclR5cGUiOiJzdXBlciIsImlhdCI6MTc2MTY0NDIxMiwiZXhwIjoxNzYxNzMwNjEyfQ.ooyw6eX5Pfdzgr4M5Tm8QVqsar9MwySVpp5nIHl39y4
 
 {
-  "name": "System Admin",
+  "name": "SafKisii Welfare",
   "theme": {
-    "primaryColor": "#3a48b4ff",
-    "accentColor": "#785878ff",
+    "primaryColor": "#2c9f06ff",
+    "accentColor": "#cd170aff",
     "logo": "/public/logos/chama.png"
   },
   "currency": "Kshs"
@@ -25,13 +26,13 @@ POST http://localhost:8001/api/register
 Content-Type: application/json
 
 {
-  "tenantId": "TN002",
-  "firstName": "Mark",
-  "middleName": "Mogere",
-  "lastName": "Mosoti",
-  "email": "marksmos2000@gmail.com",
-  "phoneNumber": "0720565328",
-  "userType": "admin"
+  "tenantId": "TN000",
+  "firstName": "Enoch",
+  "middleName": "Maonga",
+  "lastName": "Mokua",
+  "email": "maonganoch@yahoo.com",
+  "phoneNumber": "0722737989",
+  "userType": "super"
 }
 
 ###
@@ -80,7 +81,7 @@ POST http://localhost:8001/api/login
 Content-Type: application/json
 
 {
-  "email": "alsenservices@gmail.com",
+  "email": "maongaenoch@yahoo.com",
   "password": "Me0708090909"
 }
 

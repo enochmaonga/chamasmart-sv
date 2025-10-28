@@ -4,7 +4,7 @@ const Tenant = require("../models/tenantModel");
 const { requireSuperUser, verifyToken } = require("../middleware/authMiddleware");
 
 // ✅ Create tenant
-router.post("/register-tenant", requireSuperUser, async (req, res) => {
+router.post("/register-tenant", verifyToken, requireSuperUser, async (req, res) => {
   const { name, theme, currency } = req.body;
 
   if (!name) {
